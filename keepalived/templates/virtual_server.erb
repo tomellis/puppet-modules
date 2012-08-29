@@ -1,0 +1,17 @@
+
+vrrp_instance <%= name %> {
+        state <%= state %>
+        interface <%= interface %>
+        virtual_router_id <%= virtual_router_id %>
+        priority <%= real_priority %>
+        advert_int 1
+        smtp_alert
+        authentication {
+                auth_type PASS
+                auth_pass <%= auth_pass %>
+        }
+
+        virtual_ipaddress {
+               <%= virtual_ipaddress %> dev <%= virtual_dev %>
+        }
+} # END vrrp_instance <%= name %>
