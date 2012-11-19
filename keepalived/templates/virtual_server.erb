@@ -1,17 +1,33 @@
 
-vrrp_instance <%= name %> {
-        state <%= state %>
-        interface <%= interface %>
-        virtual_router_id <%= virtual_router_id %>
-        priority <%= real_priority %>
-        advert_int 1
-        smtp_alert
-        authentication {
-                auth_type PASS
-                auth_pass <%= auth_pass %>
-        }
+<% if script_name %>
+vrrp_script <%= script_name %> {
+    script "<%= script_path %>" # script to run periodically
+    interval <%= script_interval %> # run the script this every seconds
+    weight <%= script_weight %> # default: 2 - adjust priority by this weight
+    fall <%= script_fall %> # required number of failures for KO switch
+    rise <%= script_rise %> # required number of successes for OK switch
+} # END vvrp_script
+<% end %>
 
-        virtual_ipaddress {
-               <%= virtual_ipaddress %> dev <%= virtual_dev %>
-        }
+vrrp_instance <%= name %> {
+    state <%= state %>
+    interface <%= interface %>
+    virtual_router_id <%= virtual_router_id %>
+    priority <%= real_priority %>
+    advert_int 1
+    smtp_alert
+    authentication {
+        auth_type PASS
+        auth_pass <%= auth_pass %>
+    }
+
+    virtual_ipaddress {
+        <%= virtual_ipaddress %> dev <%= virtual_dev %>
+    }
+
+    <% if script_name %>
+    track_script {
+        <%= script_name %>
+    }
+    <% end %>
 } # END vrrp_instance <%= name %>
